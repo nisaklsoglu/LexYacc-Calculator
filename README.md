@@ -56,13 +56,13 @@ This project implements a simple arithmetic calculator using **Lex (Flex) and Ya
 ## Usage
 Once the program starts, you can enter mathematical expressions such as:
 3 + 5
-# Output: 8
+Output: 8
 
 (10 - 4) * 2
-# Output: 12
+Output: 12
 
 10 / 0
-# Output: Error: Division by zero!
+Output: Error: Division by zero!
 To exit, press **CTRL+D**.
 
 ## Error Handling

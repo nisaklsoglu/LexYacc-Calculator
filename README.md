@@ -25,7 +25,7 @@ Bu projede Lex ve Yacc kullanılarak matematiksel ifadelerin analiz edilmesi ve 
 ## **Çalıştırma**
 1. Lex ve Yacc dosyalarını oluşturmak için aşağıdaki komutları çalıştırın:
 ```sh
-flex calculator.l
+lex calculator.l
 bison -d calculator.y
 ```
 2. Oluşan C dosyalarını derleyerek çalıştırın:

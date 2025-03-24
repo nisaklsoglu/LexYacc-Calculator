@@ -1,73 +1,100 @@
 # LexYacc-Calculator
+Bu proje, Lex (Flex) ve Yacc (Bison) kullanılarak oluşturulmuş basit bir matematiksel hesap makinesidir. Projenin amacı, kullanıcıdan alınan aritmetik ifadeleri işleyerek sonucunu hesaplamaktır. 
 
-## Overview
-This project implements a simple arithmetic calculator using **Lex (Flex) and Yacc (Bison)**. The calculator supports basic arithmetic operations, parentheses, and handles invalid inputs gracefully. The program reads mathematical expressions from the user, parses them, evaluates the result, and prints the output immediately.
+---
 
-## Features
-- Supports integer numbers.
-- Recognizes arithmetic operators: `+`, `-`, `*`, `/`.
-- Handles parentheses for order of operations.
-- Evaluates expressions in real-time without requiring EOF (CTRL+D).
-- Includes error handling for invalid inputs and division by zero.
+## **İçindekiler**
+- [Tasarım Kararları](#tasarım-kararları)
+- [Çalıştırma](#çalıştırma)
+- [Kod Açıklaması](#kod-açıklaması)
+- [Örnek Kullanımlar](#örnek-kullanımlar)
+- [Hata Yönetimi](#hata-yönetimi)
 
-## Design Decisions
-1. **Tokenization (Lex)**:
-   - The **Lex file (`calculator.l`)** is responsible for recognizing numbers, arithmetic operators, and whitespace.
-   - It assigns appropriate tokens to operators and numbers.
-   - Ignores spaces and invalid characters, printing an error for unexpected inputs.
+---
 
-2. **Parsing & Evaluation (Yacc)**:
-   - The **Yacc file (`calculator.y`)** defines a grammar for arithmetic expressions.
-   - Operator precedence is set using `%left` to ensure correct evaluation order.
-   - Includes a `while` loop to process user input continuously.
-   - Uses an error-handling function (`yyerror`) to notify users of incorrect expressions.
+## **Tasarım Kararları**
+Bu projede Lex ve Yacc kullanılarak matematiksel ifadelerin analiz edilmesi ve yorumlanması hedeflenmiştir. Lex, karakterleri ayrıştırarak anlamlı bileşenlere ayırırken, Yacc bu bileşenleri işleyerek ifadeyi çözümler.
 
-3. **Real-Time Execution**:
-   - Instead of waiting for EOF (CTRL+D), the parser evaluates expressions as they are entered.
-   - A `while` loop in `main()` ensures immediate execution after every valid input.
+### **Tasarım İlkeleri**
+- **Hata Yönetimi**: Geçersiz karakterlerin tespit edilmesi ve sıfıra bölme gibi hataların önlenmesi sağlanmıştır.
+- **Kullanıcı Dostu**: Programın temel dört işlem operatörlerini (+, -, *, /) ve parantezleri desteklemesi, kullanımını kolaylaştırmıştır.
+- **İşlem Önceliği**: Çarpma ve bölme işlemlerinin toplama ve çıkarmaya göre öncelikli olması sağlanmıştır.
 
-## Implementation Steps
-### 1. Create `calculator.l` (Lex file)
-   - Define regular expressions to identify numbers and operators.
-   - Assign token values and return them to the parser.
-   - Ignore whitespace and handle invalid characters.
+---
 
-### 2. Create `calculator.y` (Yacc file)
-   - Define the grammar for arithmetic expressions.
-   - Implement actions to evaluate expressions.
-   - Add precedence rules to resolve shift/reduce conflicts.
-   - Handle division by zero errors.
-   - Ensure expressions are evaluated and printed immediately.
+## **Çalıştırma**
+1. Lex ve Yacc dosyalarını oluşturmak için aşağıdaki komutları çalıştırın:
+```sh
+flex calculator.l
+bison -d calculator.y
+```
+2. Oluşan C dosyalarını derleyerek çalıştırın:
+```sh
+gcc lex.yy.c calculator.tab.c -o calculator -lm
+./calculator
+```
+3. Bir matematiksel ifade girerek sonucu görebilirsiniz. Çıkmak için **CTRL+D (Linux/macOS)** veya **CTRL+Z (Windows)** tuş kombinasyonlarını kullanabilirsiniz.
 
-### 3. Compile and Run the Program
-1. **Compile Yacc (Bison) file:**
-     bison -d calculator.y
-  
-2. **Compile Lex (Flex) file:**
-     lex calculator.l
-  
-3. **Compile using GCC:**
-     gcc lex.yy.c y.tab.c -o calculator -ll
+---
 
-4. **Run the calculator:**
-     ./calculator
+## **Kod Açıklaması**
+Bu projede Lex, kullanıcıdan alınan girdi üzerinde çalışarak ifadeyi ayrıştırır ve uygun token'leri oluşturur. Yacc ise bu token'leri kullanarak işlem önceliklerine göre ifadeyi işler ve sonucu hesaplar. Projede temel aritmetik operatörler desteklenmiş olup, hata yönetimi de sağlanmıştır. Program, sıfıra bölme gibi kritik hataları tespit ederek kullanıcıya bilgi verir ve işlemi güvenli hale getirir.
 
+---
 
-## Usage
-Once the program starts, you can enter mathematical expressions such as:
+## **Uygulama Adımları**
+
+**1. calculator.l (Lex Dosyası) Oluşturma**
+   Sayılar ve operatörleri tanımlamak için düzenli ifadeler belirlenmiştir.
+   Token değerleri atanarak parser’a iletilmesi sağlanmıştır.
+   Boşluk karakterleri yok sayılmış ve geçersiz karakterler için hata kontrolü eklenmiştir.
+
+**2. calculator.y (Yacc Dosyası) Oluşturma**
+   Aritmetik ifadelerin dilbilgisi kuralları tanımlanmıştır.
+   İfadelerin doğru şekilde işlenmesi için eylemler (actions) eklenmiştir.
+   Öncelik kuralları eklenerek shift/reduce çakışmaları çözülmüştür.
+   Sıfıra bölme hataları tespit edilerek uygun hata mesajları gösterilmiştir.
+   İfadelerin anında değerlendirilip ekrana yazdırılması sağlanmıştır.
+
+---
+
+## **Örnek Kullanımlar**
+### **Örnek 1: Toplama İşlemi**
+#### **Girdi**
+```
 3 + 5
-Output: 8
+```
+#### **Çıktı**
+```
+Sonuç: 8
+```
 
-(10 - 4) * 2
-Output: 12
+### **Örnek 2: Çarpma İşlemi**
+#### **Girdi**
+```
+4 * 2
+```
+#### **Çıktı**
+```
+Sonuç: 8
+```
 
+### **Örnek 3: Sıfıra Bölme Hatası**
+#### **Girdi**
+```
 10 / 0
-Output: Error: Division by zero!
-To exit, press **CTRL+D**.
+```
+#### **Çıktı**
+```
+Hata: Sıfıra bölme hatası!
+```
+ve program sonlanır.
 
-## Error Handling
-- **Invalid characters:** Prints an error message for unrecognized input.
-- **Division by zero:** Prints an error message and prevents crashing.
-- **Mismatched parentheses:** Returns a syntax error.
+---
+
+## **Hata Yönetimi**
+Bu projede hata yönetimi iki şekilde ele alınmıştır:
+- Geçersiz karakterler algılandığında kullanıcıya hata mesajı gösterilir.
+- Sıfıra bölme gibi hatalar program tarafından tespit edilir ve kullanıcıya bilgilendirme yapılır.
 
 
